@@ -1,4 +1,3 @@
-
 import Head from 'next/head'
 import PlayerCard from '../components/PlayerCard'
 import players from '../../data/top100-sample.json'
