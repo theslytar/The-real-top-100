@@ -11,35 +11,43 @@ type Player = {
 
 export default function PlayerCard({ player }: { player: Player }) {
   return (
-    <div className="rounded-xl shadow p-4 flex gap-3 items-center bg-white">
-      {/* face photo */}
-      <div className="relative w-16 h-16 shrink-0">
-        <Image
-          src={player.faceUrl}
-          alt={player.name}
-          fill
-          sizes="64px"
-          className="object-cover rounded-full border"
-        />
+    <div
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+        gap: '12px',
+        padding: '12px',
+        borderRadius: '12px',
+        boxShadow: '0 2px 6px rgba(0,0,0,.1)',
+        background: '#fff',
+        marginBottom: '12px'
+      }}
+    >
+      <Image
+        src={player.faceUrl}
+        alt={player.name}
+        width={64}
+        height={64}
+        style={{
+          borderRadius: '50%',
+          border: '1px solid #ddd',
+          objectFit: 'cover'
+        }}
+      />
+
+      <div style={{ flex: 1 }}>
+        <div style={{ fontWeight: 600 }}>{player.name}</div>
+        <div style={{ fontSize: 14, color: '#555' }}>{player.club}</div>
+        <div style={{ fontSize: 14 }}>Rating: {player.rating}</div>
       </div>
 
-      {/* name, club, rating */}
-      <div className="flex-1">
-        <h3 className="font-semibold leading-5">{player.name}</h3>
-        <p className="text-sm text-gray-500">{player.club}</p>
-        <p className="text-sm font-medium">Rating: {player.rating}</p>
-      </div>
-
-      {/* flag */}
-      <div className="w-8 h-6 shrink-0">
-        <Image
-          src={player.flagUrl}
-          alt={`${player.nation} flag`}
-          width={48}
-          height={36}
-          className="object-cover rounded-sm"
-        />
-      </div>
+      <Image
+        src={player.flagUrl}
+        alt={`${player.nation} flag`}
+        width={48}
+        height={36}
+        style={{ borderRadius: 4, objectFit: 'cover' }}
+      />
     </div>
   );
 }
