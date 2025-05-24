@@ -1,53 +1,28 @@
-import Image from 'next/image';
+import Image from "next/image";
 
 type Player = {
-  name: string;
-  rating: number;
-  club: string;
-  nation: string;
-  faceUrl: string;
-  flagUrl: string;
+  id:        number;
+  name:      string;
+  rating:    number;
+  image:     string;
+  club:      string;
+  league:    string;
+  nation:    string;
+  price:     number;
 };
 
-export default function PlayerCard({ player }: { player: Player }) {
+export default function PlayerCard({ p }: { p: Player }) {
   return (
-    <div
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-        gap: '12px',
-        padding: '12px',
-        borderRadius: '12px',
-        boxShadow: '0 2px 6px rgba(0,0,0,.1)',
-        background: '#fff',
-        marginBottom: '12px'
-      }}
-    >
-      <Image
-        src={player.faceUrl}
-        alt={player.name}
-        width={64}
-        height={64}
-        style={{
-          borderRadius: '50%',
-          border: '1px solid #ddd',
-          objectFit: 'cover'
-        }}
-      />
-
-      <div style={{ flex: 1 }}>
-        <div style={{ fontWeight: 600 }}>{player.name}</div>
-        <div style={{ fontSize: 14, color: '#555' }}>{player.club}</div>
-        <div style={{ fontSize: 14 }}>Rating: {player.rating}</div>
+    <div className="rounded-2xl shadow p-4 flex gap-4 items-center">
+      <Image src={p.image} alt={p.name} width={64} height={64} className="rounded-lg" />
+      <div className="flex-1">
+        <h3 className="font-bold">{p.name}</h3>
+        <p className="text-sm">{p.club} · {p.league} · {p.nation}</p>
       </div>
-
-      <Image
-        src={player.flagUrl}
-        alt={`${player.nation} flag`}
-        width={48}
-        height={36}
-        style={{ borderRadius: 4, objectFit: 'cover' }}
-      />
+      <div className="text-right">
+        <p className="text-xl font-semibold">{p.rating}</p>
+        <p className="text-sm">₵ {p.price.toLocaleString()}</p>
+      </div>
     </div>
   );
 }
