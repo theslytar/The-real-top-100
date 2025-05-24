@@ -1,65 +1,60 @@
-import { useState, useMemo } from 'react';
-import PlayerCard from '@/components/PlayerCard';
-import players from '@/data/top100-sample.json';
+import { useState, useMemo } from "react";
+import playersRaw from "../data/top100.json";
+import PlayerCard from "../components/PlayerCard";
 
-type Player = typeof players[number];   // expects each player to have league & nation
+type RawPlayer = typeof playersRaw[number];
 
 export default function Home() {
-  const [query,  setQuery]  = useState('');
-  const [league, setLeague] = useState('All');
-  const [nation, setNation] = useState('All');
-  const [order,  setOrder]  = useState<'HIGH' | 'LOW'>('HIGH');
+  const [q, setQ]           = useState("");
+  const [league, setLeague] = useState("all");
+  const [nation, setNation] = useState("all");
+  const [order, setOrder]   = useState<"hi"|"lo">("hi");
 
-  // build dropdown lists
-  const leagues = useMemo(() => ['All', ...new Set(players.map(p => p.league))], []);
-  const nations = useMemo(() => ['All', ...new Set(players.map(p => p.nation))], []);
+  /* unique filter lists */
+  const leagues = useMemo(() => [...new Set(playersRaw.map(p => p.league))], []);
+  const nations = useMemo(() => [...new Set(playersRaw.map(p => p.nation))], []);
 
-  // filtered + sorted list
-  const list = useMemo(() => {
-    let arr: Player[] = players;
+  /* filtered + sorted */
+  const players = useMemo(() => {
+    let out: RawPlayer[] = playersRaw;
 
-    if (query.trim())
-      arr = arr.filter(p => p.name.toLowerCase().includes(query.toLowerCase()));
-    if (league !== 'All') arr = arr.filter(p => p.league === league);
-    if (nation !== 'All') arr = arr.filter(p => p.nation === nation);
+    if (q)      out = out.filter(p => p.name.toLowerCase().includes(q.toLowerCase()));
+    if (league !== "all") out = out.filter(p => p.league === league);
+    if (nation !== "all") out = out.filter(p => p.nation === nation);
 
-    arr = [...arr].sort((a, b) =>
-      order === 'HIGH' ? b.rating - a.rating : a.rating - b.rating
+    return out.sort((a, b) =>
+      order === "hi" ? b.rating - a.rating : a.rating - b.rating
     );
-    return arr;
-  }, [query, league, nation, order]);
-
-  const sel: React.CSSProperties = { padding: 8, borderRadius: 6, border: '1px solid #ccc' };
+  }, [q, league, nation, order]);
 
   return (
-    <main style={{ maxWidth: 700, margin: '0 auto', padding: 24 }}>
-      <h1 style={{ fontSize: 32, fontWeight: 700, marginBottom: 16 }}>FC 25 Top 100</h1>
-
+    <main className="max-w-4xl mx-auto p-6 space-y-6">
       {/* controls */}
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: 12, marginBottom: 20 }}>
+      <div className="grid gap-3 sm:grid-cols-4">
         <input
-          value={query}
-          onChange={e => setQuery(e.target.value)}
-          placeholder="Search player…"
-          style={{ flex: 1, padding: 8, borderRadius: 6, border: '1px solid #ccc' }}
+          value={q}
+          onChange={e => setQ(e.target.value)}
+          placeholder="Search name..."
+          className="sm:col-span-2 rounded p-2 border"
         />
-
-        <select style={sel} value={league} onChange={e => setLeague(e.target.value)}>
+        <select value={league} onChange={e => setLeague(e.target.value)} className="rounded p-2 border">
+          <option value="all">All leagues</option>
           {leagues.map(l => <option key={l}>{l}</option>)}
         </select>
-
-        <select style={sel} value={nation} onChange={e => setNation(e.target.value)}>
+        <select value={nation} onChange={e => setNation(e.target.value)} className="rounded p-2 border">
+          <option value="all">All nations</option>
           {nations.map(n => <option key={n}>{n}</option>)}
         </select>
-
-        <select style={sel} value={order} onChange={e => setOrder(e.target.value as any)}>
-          <option value="HIGH">Rating ↓</option>
-          <option value="LOW">Rating ↑</option>
+        <select value={order} onChange={e => setOrder(e.target.value as any)} className="rounded p-2 border">
+          <option value="hi">Rating ⬆︎</option>
+          <option value="lo">Rating ⬇︎</option>
         </select>
       </div>
 
-      {list.map(p => <PlayerCard key={p.name} player={p} />)}
-      {!list.length && <p>No players match.</p>}
+      {/* list */}
+      <div className="grid gap-4">
+        {players.map(p => <PlayerCard key={p.id} p={p} />)}
+      </div>
     </main>
   );
 }
