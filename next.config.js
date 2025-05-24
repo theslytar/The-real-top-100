@@ -1,14 +1,9 @@
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-
-  // ⬇️ allow external images from Futbin & FlagCDN
   images: {
-    remotePatterns: [
-      { protocol: 'https', hostname: 'cdn.futbin.com' },
-      { protocol: 'https', hostname: 'flagcdn.com' }
-    ]
-  }
+    domains: ["cdn.futbin.com"],   // ← change or add domains if your image URLs use another host
+  },
 };
 
 module.exports = nextConfig;
